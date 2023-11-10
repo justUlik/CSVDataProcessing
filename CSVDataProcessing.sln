@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVDataProcessing", "CSVDataProcessing\CSVDataProcessing.csproj", "{C8B9F2BC-469A-4FC0-9154-E45B43AC8840}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVDataUtility", "CSVDataUtility\CSVDataUtility.csproj", "{AF4ED6B3-F788-4B41-B0EE-A328FB82D639}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8B9F2BC-469A-4FC0-9154-E45B43AC8840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8B9F2BC-469A-4FC0-9154-E45B43AC8840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8B9F2BC-469A-4FC0-9154-E45B43AC8840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8B9F2BC-469A-4FC0-9154-E45B43AC8840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF4ED6B3-F788-4B41-B0EE-A328FB82D639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF4ED6B3-F788-4B41-B0EE-A328FB82D639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF4ED6B3-F788-4B41-B0EE-A328FB82D639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4ED6B3-F788-4B41-B0EE-A328FB82D639}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

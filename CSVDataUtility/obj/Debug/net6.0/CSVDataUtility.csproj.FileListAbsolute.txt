@@ -1,0 +1,12 @@
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/bin/Debug/net6.0/CSVDataUtility.deps.json
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/bin/Debug/net6.0/CSVDataUtility.dll
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/bin/Debug/net6.0/CSVDataUtility.pdb
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/CSVDataUtility.csproj.AssemblyReference.cache
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/CSVDataUtility.GeneratedMSBuildEditorConfig.editorconfig
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/CSVDataUtility.AssemblyInfoInputs.cache
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/CSVDataUtility.AssemblyInfo.cs
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/CSVDataUtility.csproj.CoreCompileInputs.cache
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/CSVDataUtility.dll
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/refint/CSVDataUtility.dll
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/CSVDataUtility.pdb
+/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/Debug/net6.0/ref/CSVDataUtility.dll

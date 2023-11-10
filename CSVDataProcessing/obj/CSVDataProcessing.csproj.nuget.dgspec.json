@@ -1,0 +1,118 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataProcessing/CSVDataProcessing.csproj": {}
+  },
+  "projects": {
+    "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataProcessing/CSVDataProcessing.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataProcessing/CSVDataProcessing.csproj",
+        "projectName": "CSVDataProcessing",
+        "projectPath": "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataProcessing/CSVDataProcessing.csproj",
+        "packagesPath": "/Users/ulyanaeskova/.nuget/packages/",
+        "outputPath": "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataProcessing/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/ulyanaeskova/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/CSVDataUtility.csproj": {
+                "projectPath": "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/CSVDataUtility.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.413/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/CSVDataUtility.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/CSVDataUtility.csproj",
+        "projectName": "CSVDataUtility",
+        "projectPath": "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/CSVDataUtility.csproj",
+        "packagesPath": "/Users/ulyanaeskova/.nuget/packages/",
+        "outputPath": "/Users/ulyanaeskova/RiderProjects/CSVDataProcessing/CSVDataUtility/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/ulyanaeskova/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.413/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
