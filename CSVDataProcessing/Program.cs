@@ -1,14 +1,12 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using CSVDataProcessing;
 
 class Program
 {
     static void Main()
     {
-        string[] data = UserDataProcessing.GetCsvDataFile();
-        foreach (var line in data)
-        {
-            Console.WriteLine(line);
-        }
+        string[][] data = UserDataProcessing.GetCsvDataFile();
+        UserDataProcessing.MainMenu(in data);
     }
 }

@@ -77,12 +77,16 @@ public class CsvProcessing
         {
             throw new ArgumentNullException("Empty file given");
         }
+
+        for (int i = 0; i < 2; ++i)
+        {
+            lines[i] = lines[i].Replace("\"", "");
+        }
         
         for (int i = 2; i < lines.Length; ++i)
         {
             string forException = "";
             lines[i] = lines[i].Replace("\"", "");
-            Console.WriteLine(lines[i]);
             if (!CheckLineFormat(lines[i], ref forException))
             {
                 throw new ArgumentNullException(forException);
@@ -92,6 +96,37 @@ public class CsvProcessing
         return lines;
     }
 
+    public static string[][] RefactorData(string[] data)
+    {
+        if (data is null)
+        {
+            return null;
+        }
+
+        string[][] result = new string[data.Length][];
+
+        try
+        {
+            for (int i = 0; i < data.Length; ++i)
+            {
+                string[] line = data[i].Split(';');
+                if (line is null)
+                {
+                    break;
+                }
+
+                result[i] = line;
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
+    }
+    
     public static void Write(string data, string nPath)
     {
         if (string.IsNullOrEmpty(nPath))
