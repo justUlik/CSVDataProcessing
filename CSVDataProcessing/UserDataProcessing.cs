@@ -99,10 +99,10 @@ public static class UserDataProcessing
             return;
         }
         const int spaceId = 5;
-        const int spaceStationStart = 19;
+        const int spaceStationStart = 22;
         const int spaceLine = 19;
         const int spaceTimeStart = 9;
-        const int spaceStationEnd = 19;
+        const int spaceStationEnd = 22;
         const int spaceTimeEnd = 7;
         const int spaceGlobalId = 10;
         // heading
@@ -169,7 +169,71 @@ public static class UserDataProcessing
             }
         } while (!isRecievedTrainsition);
     }
-    public static void MainMenu(in string[][] data)
+
+    public static void SortMenu(string[][] data)
+    {
+        Console.Clear();
+        Console.WriteLine("Choose by which sort method you want to sort data. Press the corresponding number");
+        Console.WriteLine("1. MergeSort");
+        Console.WriteLine("2. QuickSort");
+        string typeSort = "";
+        bool isRecievedTrainsition = false;
+        do
+        {
+            var cmd = Console.ReadKey().Key;
+            if (cmd == ConsoleKey.D1) 
+            { 
+                isRecievedTrainsition = true;
+                typeSort = "MergeSort";
+            } else if (cmd == ConsoleKey.D2) 
+            { 
+                isRecievedTrainsition = true;
+                typeSort = "QuickSort";
+            }
+            else
+            {
+                isRecievedTrainsition = false;
+            }
+
+            if (!isRecievedTrainsition)
+            {
+                Console.WriteLine("Try again");
+            }
+        } while (!isRecievedTrainsition);
+
+        Console.Clear();
+        Console.WriteLine("Choose by which row you want to sort data. Press the corresponding number");
+        Console.WriteLine("1. TimeStart - in order of increasing time");
+        Console.WriteLine("2. TimeEnd - in order of increasing time");
+        
+        isRecievedTrainsition = false;
+        do
+        {
+            var cmd = Console.ReadKey().Key;
+            if (cmd == ConsoleKey.D1) 
+            { 
+                isRecievedTrainsition = true;
+                string[][] result = CsvDataUtility.DataProcessing.Sort(data, "TimeStart", typeSort);
+                PrintData(result);
+            } else if (cmd == ConsoleKey.D2) 
+            { 
+                isRecievedTrainsition = true; 
+                string[][] result = CsvDataUtility.DataProcessing.Sort(data, "TimeEnd", typeSort);
+                PrintData(result);
+            }
+            else
+            {
+                isRecievedTrainsition = false;
+            }
+
+            if (!isRecievedTrainsition)
+            {
+                Console.WriteLine("Try again");
+            }
+        } while (!isRecievedTrainsition);
+    }
+    
+    public static void MainMenu(string[][] data)
     {
         bool isRecievedTrainsition = false;
 
@@ -190,7 +254,7 @@ public static class UserDataProcessing
                     break;
                 case ConsoleKey.D2:
                     isRecievedTrainsition = true;
-                    //SortMenu();
+                    SortMenu(data);
                     break;
                 case ConsoleKey.D3:
                     isRecievedTrainsition = true;

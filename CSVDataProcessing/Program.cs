@@ -7,6 +7,6 @@ class Program
     static void Main()
     {
         string[][] data = UserDataProcessing.GetCsvDataFile();
-        UserDataProcessing.MainMenu(in data);
+        UserDataProcessing.MainMenu(data);
     }
 }
