@@ -1,5 +1,7 @@
+using System.Runtime.Intrinsics.Arm;
 using System.Security.AccessControl;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using CsvDataUtility;
 
@@ -7,25 +9,58 @@ namespace CSVDataProcessing;
 
 public static class UserDataProcessing
 {
-    public static string[][] GetCsvDataFile()
+    private static string GetFilePath()
+    {
+        bool isRead = false;
+        string fileName;
+        Console.WriteLine("Please enter file path. File extension should be csv:");
+        do
+        {
+            fileName = Console.ReadLine();
+            try
+            {
+                Regex containsABadCharacter = new Regex("["
+                                                        + Regex.Escape(new string(System.IO.Path.GetInvalidPathChars())) + "]");
+                if (containsABadCharacter.IsMatch(fileName))
+                {
+                    isRead = false;
+                }
+                else
+                {
+                    if (Path.GetExtension(fileName) == ".csv")
+                    {
+                        isRead = true;    
+                    }
+                    else 
+                    { 
+                        isRead = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                isRead = false;
+                Console.WriteLine(ex.Message);
+            }
+
+            if (!isRead)
+            {
+                Console.WriteLine("Please try again:");
+            }
+        } while (!isRead);
+
+        return fileName;
+    }
+    public static string[][]? GetCsvDataFile()
     {
         Console.Clear();
         bool isRead = false;
         string[][] data = null;
         do
         {
-            Console.WriteLine("Please enter absolute file path. File exstension should be csv:");
-            string filePath = Console.ReadLine();
+            string filePath = GetFilePath();
             try
             {
-                /*if (filePath != Path.GetFullPath(Path.GetFileName(filePath)))
-                {
-                    Console.WriteLine(filePath);
-                    Console.WriteLine(Path.GetFullPath(Path.GetFileName(filePath)));
-                    isRead = false;
-                    Console.WriteLine("It is not absolute path. Please try again");
-                    continue;
-                }*/
                 CsvDataUtility.CsvProcessing.fPath = filePath;
                 string[] notFormatedData = CsvDataUtility.CsvProcessing.Read();
                 data = CsvDataUtility.CsvProcessing.RefactorData(notFormatedData);
@@ -38,7 +73,7 @@ public static class UserDataProcessing
                 isRead = false;
             }
         } while (!isRead);
-
+        Console.WriteLine("Data read finished successfully!");
         return data;
     }
 
@@ -106,21 +141,116 @@ public static class UserDataProcessing
         const int spaceTimeEnd = 7;
         const int spaceGlobalId = 10;
         // heading
-        Console.WriteLine($"{data[0][0],spaceId} | {data[0][1],spaceStationStart} | {data[0][2],spaceLine} | " +
+        Console.WriteLine($"№{0,5} | {data[0][0],spaceId} | {data[0][1],spaceStationStart} | {data[0][2],spaceLine} | " +
                           $"{data[0][3],spaceTimeStart} | {data[0][4],spaceStationEnd} | {data[0][5],spaceTimeEnd} | " +
                           $"{data[0][6],spaceGlobalId} | {data[0][7]} |");
-        Console.WriteLine($"{CutString(data[1][0],spaceId),spaceId} | {CutString(data[1][1],spaceStationStart),spaceStationStart} | " +
+        Console.WriteLine($"№{1,5} | {CutString(data[1][0],spaceId),spaceId} | {CutString(data[1][1],spaceStationStart),spaceStationStart} | " +
                           $"{CutString(data[1][2],spaceLine),spaceLine} | {CutString(data[1][3],spaceTimeStart),spaceTimeStart} | " +
                           $"{CutString(data[1][4],spaceStationEnd),spaceStationEnd} | {CutString(data[1][5],spaceTimeEnd),spaceTimeEnd} | " +
                           $"{CutString(data[1][6],spaceGlobalId),spaceGlobalId} | {data[1][7]} |");
         // data
         for (int i = 2; i < data.GetLength(0); ++i)
         {
-            Console.WriteLine($"{data[i][0],spaceId} | {data[i][1],spaceStationStart} | {data[i][2],spaceLine} | " +
+            Console.WriteLine($"№{i,5} | {data[i][0],spaceId} | {data[i][1],spaceStationStart} | {data[i][2],spaceLine} | " +
                               $"{data[i][3],spaceTimeStart} | {data[i][4],spaceStationEnd} | {data[i][5],spaceTimeEnd} | " +
                               $"{data[i][6],spaceGlobalId} | {data[i][7]} |");
 
         }
+        
+        Console.WriteLine("\nPress Q to close data view:");
+        bool isRead = false;
+        do
+        {
+            var cmd = Console.ReadKey().Key;
+            if (cmd == ConsoleKey.Q)
+            {
+                isRead = true;
+            }
+        } while (!isRead);
+    }
+
+    private static void SaveAllData(string[][] data)
+    {
+        string filePath = GetFilePath();
+        CsvDataUtility.CsvProcessing.fPath = filePath;
+        string[] reformatData = data
+            .Select(row => string.Join<string>(";", row))
+            .ToArray();
+
+        CsvDataUtility.CsvProcessing.Write(reformatData);
+    }
+
+    private static void SaveOneStringData(string[][] data)
+    {
+        Console.Clear();
+        Console.WriteLine("Choose index of this line(in table after №");
+        PrintData(data);
+        Console.WriteLine("Please enter index of this line(in table after №):");
+        bool isRead = false;
+        int ind;
+        do
+        {
+            if (int.TryParse(Console.ReadLine(), out ind))
+            {
+                if (0 < ind && ind < data.GetLength(0))
+                {
+                    isRead = true;
+                }
+            }
+
+            if (!isRead)
+            {
+                Console.WriteLine("Try again:");
+            }
+        } while (!isRead);
+
+        bool success = false;
+        do
+        {
+            string nPath = GetFilePath();
+            string line = string.Join<string>(";", data[ind]);
+            try
+            {
+                CsvDataUtility.CsvProcessing.Write(line, nPath);
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            
+            }
+        } while (!success);
+    }
+    
+    private static void SaveDataMenu(string[][] data)
+    {
+        Console.Clear();
+        Console.WriteLine("Choose one option by pressing corresponding number");
+        Console.WriteLine("1. Save all data to file");
+        Console.WriteLine("2. Write only one line from data to file");
+        Console.WriteLine("3. Stop this session");
+
+        bool isRead = false;
+        do
+        {
+            var cmd = Console.ReadKey().Key;
+            if (cmd == ConsoleKey.D1)
+            {
+                SaveAllData(data);
+                isRead = true;
+            } 
+            else if (cmd == ConsoleKey.D2)
+            {
+                SaveOneStringData(data);
+                isRead = true;
+            }
+            else if (cmd == ConsoleKey.D3)
+            {
+                isRead = true;
+                return;
+            }
+        } while (!isRead);
+        Console.WriteLine("Data successfully was written to file!");
     }
     
     public static void SelectionMenu(string[][] data)
@@ -143,12 +273,14 @@ public static class UserDataProcessing
                 string valueSelection = UserGetValueSelectionByRow(data, "StationStart");
                 string[][] result = CsvDataUtility.DataProcessing.GetSelectionByValueRow(data, "StationStart", valueSelection);
                 PrintData(result);
+                SaveDataMenu(result);
             } else if (cmd == ConsoleKey.D2) 
             { 
                 isRecievedTrainsition = true; 
                 string valueSelection = UserGetValueSelectionByRow(data, "StationEnd");
                 string[][] result = CsvDataUtility.DataProcessing.GetSelectionByValueRow(data, "StationEnd", valueSelection);
                 PrintData(result);
+                SaveDataMenu(result);
             } else if (cmd == ConsoleKey.D3) 
             { 
                 isRecievedTrainsition = true; 
@@ -157,6 +289,7 @@ public static class UserDataProcessing
                 string[][] result = CsvDataUtility.DataProcessing.GetSelectionByValueRow(data, "StationStart",
                     valueSelectionStart, "StationEnd", valueSelectionEnd);
                 PrintData(result);
+                SaveDataMenu(result);
             }
             else
             {
@@ -215,11 +348,13 @@ public static class UserDataProcessing
                 isRecievedTrainsition = true;
                 string[][] result = CsvDataUtility.DataProcessing.Sort(data, "TimeStart", typeSort);
                 PrintData(result);
+                SaveDataMenu(result);
             } else if (cmd == ConsoleKey.D2) 
             { 
                 isRecievedTrainsition = true; 
                 string[][] result = CsvDataUtility.DataProcessing.Sort(data, "TimeEnd", typeSort);
                 PrintData(result);
+                SaveDataMenu(result);
             }
             else
             {

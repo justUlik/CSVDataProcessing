@@ -6,7 +6,12 @@ class Program
 {
     static void Main()
     {
-        string[][] data = UserDataProcessing.GetCsvDataFile();
-        UserDataProcessing.MainMenu(data);
+        do
+        {
+            string[][] data = UserDataProcessing.GetCsvDataFile();
+            UserDataProcessing.MainMenu(data);
+
+            Console.WriteLine("To have another session press any key, to finish - press escape");
+        } while (Console.ReadKey().Key != ConsoleKey.Escape);
     }
 }

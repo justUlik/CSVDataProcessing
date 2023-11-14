@@ -5,7 +5,21 @@ using System.IO;
 
 public class CsvProcessing
 {
-    public static string fPath;
+    private static string _fPath;
+    
+    public static string fPath 
+    { 
+        get => _fPath; 
+        set 
+        { 
+            if (string.IsNullOrEmpty(value)) 
+            { 
+                throw new ArgumentNullException(nameof(value));
+            }
+ 
+            _fPath = value; 
+        } 
+    } 
 
     private static bool CheckLineFormat(string line, ref string forException)
     {
@@ -59,6 +73,7 @@ public class CsvProcessing
             return false;
         }
     }
+
     public static string[] Read()
     {
         if (string.IsNullOrEmpty(fPath))
@@ -71,6 +86,11 @@ public class CsvProcessing
             throw new ArgumentNullException("File does not exist");    
         }
 
+        if (Path.GetFullPath(fPath) != fPath)
+        {
+            throw new ArgumentException("Not absolute path given");
+        }
+        
         string[] lines = File.ReadAllLines(fPath);
 
         if (lines is null || (lines is not null && lines.Length == 0))
@@ -134,12 +154,18 @@ public class CsvProcessing
             throw new ArgumentNullException(nameof(nPath));    
         }
 
+        if (!File.Exists(nPath))
+        {
+            var file = File.Create(nPath);
+            file.Close();
+        }
+
         if (File.Exists(nPath))
         {
             using (StreamWriter file = File.AppendText(nPath))
             {
                 file.WriteLine(data);
-            }
+            }    
         }
         else
         {
@@ -153,6 +179,12 @@ public class CsvProcessing
         {
             throw new ArgumentNullException(nameof(fPath));    
         }
+        
+        if (!File.Exists(fPath))
+        {
+            var file = File.Create(fPath);
+            file.Close();
+        }
 
         if (File.Exists(fPath))
         {
@@ -163,4 +195,5 @@ public class CsvProcessing
             throw new FileNotFoundException("File not found", fPath);
         }
     }
+    
 }
