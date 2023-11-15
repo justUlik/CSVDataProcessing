@@ -26,6 +26,7 @@ public class CsvProcessing
         string[] fields = line.Split(";");
         try
         {
+            // CHECK!
             if (!(fields?.Length > 0))
             {
                 forException = "File null or empty";
@@ -77,6 +78,54 @@ public class CsvProcessing
         }
     }
 
+    public static bool CheckHeading(string[][] data)
+    {
+        if (data is null || (data is not null && data.GetLength(0) == 0))
+        {
+            return false;
+        }
+
+        try
+        {
+            if (data.GetLength(0) < 2)
+            {
+                return false;
+            }
+
+            foreach (var line in data)
+            {
+                if (line is null || (line is not null && line.GetLength(0) == 0))
+                {
+                    return false;
+                }
+
+                if (line.Length != 8)
+                {
+                    return false;
+                }
+            }
+
+            string[] firstReference = new[]
+                { "ID", "StationStart", "Line", "TimeStart", "StationEnd", "TimeEnd", "global_id", "" };
+            string[] secondReference = new[]
+            {
+                "Локальный идентификатор", "Станция отправления", "Направление Аэроэкспресс",
+                "Время отправления со станции", "Конечная станция направления Аэроэкспресс",
+                "Время прибытия на конечную станцию направления Аэроэкспресс", "global_id", ""
+            };
+            if (data[0] != firstReference || data[1] != secondReference)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
+
     public static string[] Read()
     {
         if (string.IsNullOrEmpty(fPath))
@@ -106,6 +155,7 @@ public class CsvProcessing
             {
                 throw new Exception("The file format is not observed");
             }
+            
             for (int i = 0; i < 2; ++i)
             {
                 lines[i] = lines[i].Replace("\"", "");

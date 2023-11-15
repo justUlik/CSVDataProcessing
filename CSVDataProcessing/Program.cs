@@ -4,10 +4,12 @@ using CSVDataProcessing;
 
 class Program
 {
+    // /Users/ulyanaeskova/Downloads/aeroexpress.csv
     static void Main()
     {
         do
         {
+            // написать try catch
             string[][] data = UserDataProcessing.GetCsvDataFile();
             UserDataProcessing.MainMenu(data);
 

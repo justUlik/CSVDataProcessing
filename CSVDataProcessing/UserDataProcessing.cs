@@ -63,13 +63,17 @@ public static class UserDataProcessing
                 }
                 else
                 {
-                    if (Path.GetExtension(fileName) == ".csv")
+                    bool isCheckedExtension = Path.GetExtension(fileName) == ".csv";
+                    bool isNullOrEmpty = string.IsNullOrEmpty(Path.GetFileNameWithoutExtension(fileName));
+                    bool is0Length = Path.GetFileNameWithoutExtension(fileName).Length == 0;
+                    if (!isCheckedExtension || isNullOrEmpty || is0Length)
                     {
-                        isRead = true;    
-                    }
-                    else 
-                    { 
                         isRead = false;
+                    }
+                    else
+                    {
+                        isRead = true;
+                        fileName = Path.GetFullPath(fileName);
                     }
                 }
             }
@@ -111,12 +115,29 @@ public static class UserDataProcessing
                 }
                 data = CsvDataUtility.CsvProcessing.RefactorData(notFormatData);
                 isRead = true;
+                try
+                {
+                    if (!CsvDataUtility.CsvProcessing.CheckHeading(data))
+                    {
+                        isRead = false;
+                        Console.WriteLine("Such file doesn`t require format.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    isRead = false;
+                    Console.WriteLine(ex.Message);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.WriteLine("Try again:");
                 isRead = false;
+            }
+
+            if (!isRead)
+            {
+                Console.WriteLine("Try again:");
             }
         } while (!isRead);
         Console.WriteLine("Data read finished successfully!");
@@ -359,17 +380,17 @@ public static class UserDataProcessing
         // heading
         Console.WriteLine($"№{0,4} | {data[0][0],spaceId} | {data[0][1],spaceStationStart} | {data[0][2],spaceLine} | " +
                           $"{data[0][3],spaceTimeStart} | {data[0][4],spaceStationEnd} | {data[0][5],spaceTimeEnd} | " +
-                          $"{data[0][6],spaceGlobalId} | {data[0][7]} |");
+                          $"{data[0][6],spaceGlobalId} |{data[0][7]}|");
         Console.WriteLine($"№{1,4} | {CutString(data[1][0],spaceId),spaceId} | {CutString(data[1][1],spaceStationStart),spaceStationStart} | " +
                           $"{CutString(data[1][2],spaceLine),spaceLine} | {CutString(data[1][3],spaceTimeStart),spaceTimeStart} | " +
                           $"{CutString(data[1][4],spaceStationEnd),spaceStationEnd} | {CutString(data[1][5],spaceTimeEnd),spaceTimeEnd} | " +
-                          $"{CutString(data[1][6],spaceGlobalId),spaceGlobalId} | {data[1][7]} |");
+                          $"{CutString(data[1][6],spaceGlobalId),spaceGlobalId} |{data[1][7]}|");
         // data
         for (int i = 2; i < data.GetLength(0); ++i)
         {
             Console.WriteLine($"№{i,4} | {data[i][0],spaceId} | {data[i][1],spaceStationStart} | {data[i][2],spaceLine} | " +
                               $"{data[i][3],spaceTimeStart} | {data[i][4],spaceStationEnd} | {data[i][5],spaceTimeEnd} | " +
-                              $"{data[i][6],spaceGlobalId} | {data[i][7]} |");
+                              $"{data[i][6],spaceGlobalId} |{data[i][7]}|");
 
         }
         
@@ -449,13 +470,24 @@ public static class UserDataProcessing
                 catch (Exception ex)
                 {
                     isRead = false;
+                    SaveAllData(data);
                     Console.WriteLine(ex.Message);
                 }
             } 
             else if (cmd == ConsoleKey.D2)
             {
-                SaveOneStringData(data);
-                isRead = true;
+                try
+                {
+                    SaveOneStringData(data);
+                    isRead = true;
+                }
+                catch (Exception ex)
+                {
+                    isRead = false;
+                    SaveOneStringData(data);
+                    Console.WriteLine(ex.Message);
+                }
+                
             }
             else if (cmd == ConsoleKey.D3)
             {
