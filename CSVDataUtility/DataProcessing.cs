@@ -65,7 +65,20 @@ public class DataProcessing
         }
     }
     
-    
+    /// <summary>
+    /// This method takes in a 2D array of strings, a column name and a value for that column,
+    /// and another column name and value. It returns a 2D array of strings that match both column value conditions.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="columnName1"></param>
+    /// <param name="valueSelection1"></param>
+    /// <param name="columnName2"></param>
+    /// <param name="valueSelection2"></param>
+    /// <returns>selection by value</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="IndexOutOfRangeException"></exception>
+    /// <exception cref="Exception"></exception>
     public static string[][] GetSelectionByValueRow(string[][] data, string columnName1, string valueSelection1,
         string columnName2, string valueSelection2)
     {
@@ -115,6 +128,17 @@ public class DataProcessing
         }
     }
 
+    /// <summary>
+    /// Make selection for data by 1 column. 
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="coloumnName"></param>
+    /// <param name="valueName"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="IndexOutOfRangeException"></exception>
+    /// <exception cref="Exception"></exception>
     public static string[][] GetSelectionByValueRow(string[][] data, string coloumnName, string valueName)
     {
         if (data is null || (data is not null && data.GetLength(0) == 0))
@@ -160,6 +184,17 @@ public class DataProcessing
         }
     }
 
+    
+    /// <summary>
+    /// Choose the way to sort the data and by which coloumn
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="coloumn"></param>
+    /// <param name="typeSort"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="Exception"></exception>
     public static string[][] Sort(string[][] data, string coloumn, string typeSort)
     {
         if (data is null || (data is not null && data.GetLength(0) == 0))

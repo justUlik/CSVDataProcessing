@@ -3,6 +3,10 @@
 using System;
 using System.IO;
 
+
+/// <summary>
+/// Class for reading and writing csv files.
+/// </summary>
 public class CsvProcessing
 {
     private static string _fPath;
@@ -21,6 +25,16 @@ public class CsvProcessing
         } 
     } 
 
+    /// <summary>
+    /// The method checks the format of the string and sets an exception in case of an error.
+    /// It accepts a string and a reference to the string to set the exception.
+    /// If the string is empty or contains no data, the exception is set to “File is null or empty".
+    /// If the number of fields in a row is not equal to 8, the exception is set to “The file is not in required format".
+    /// If the field cannot be converted to an integer, the exception is set to “There is an error in the file format".
+    /// </summary>
+    /// <param name="line"></param>
+    /// <param name="forException"></param>
+    /// <returns></returns>
     private static bool CheckLineFormat(string line, ref string forException)
     {
         string[] fields = line.Split(";");
@@ -78,6 +92,14 @@ public class CsvProcessing
         }
     }
 
+    /// <summary>
+    /// The method checks whether the string matches the specified format. If the string is empty or does not match
+    /// the format, the method returns false. If the string length is less than 2, the method also returns false.
+    /// The method iterates through all the rows in the array and checks them for compliance with the format.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public static bool CheckHeading(string[][] data)
     {
         if (data is null || (data is not null && data.GetLength(0) == 0))
@@ -138,6 +160,18 @@ public class CsvProcessing
         }
     }
 
+    
+    /// <summary>
+    /// The Read() method is used to read data from a file. If the path to the file is not specified or the file
+    /// does not exist, an exception is thrown. If the specified path is not absolute, another exception is thrown.
+    /// After checking the path to the file, all lines from the file are read and an array of lines is returned.
+    /// If the file is empty or does not exist, an empty array is returned.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="Exception"></exception>
+    /// <exception cref="IOException"></exception>
     public static string[] Read()
     {
         if (string.IsNullOrEmpty(fPath))
@@ -202,6 +236,17 @@ public class CsvProcessing
         }
     }
 
+    
+    /// <summary>
+    /// The RefactorData method accepts an array of data strings as input and returns a formatted two-dimensional array
+    /// of strings. If the input array is empty or null, null is returned.
+    /// A new string[] array is created for each element of the input array, which is then filled with values after
+    /// splitting the input string by the separator ‘;’. If the input array does not contain null values and all rows
+    /// have been successfully converted to a two-dimensional array, the result is returned.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public static string[][]? RefactorData(string[] data)
     {
         if (data is null)
@@ -231,6 +276,17 @@ public class CsvProcessing
         }
     }
     
+    /// <summary>
+    /// The Write method is intended for writing data to a file. If the data is empty or null, the method does nothing.
+    /// If the path to the new file is not specified, an ArgumentNullException is thrown.
+    /// If the file does not exist, it is created and the method continues to work.
+    /// Then the data is written to the file and closed.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="nPath"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="FileNotFoundException"></exception>
+    /// <exception cref="Exception"></exception>
     public static void Write(string data, string nPath)
     {
         if (data is null || (data is not null && data.Length == 0))
@@ -268,6 +324,16 @@ public class CsvProcessing
         }
     }
 
+    /// <summary>
+    /// The Write method is used to write data to a file. It accepts a two-dimensional data array and a file path as
+    /// input. If the data is empty or null, an ArgumentNullException is thrown with the message “Given data is empty or
+    /// null". If the path to the file is empty, an exception is thrown with the message “File path is null or empty".
+    /// Then it checks if the file exists. If not, it is created. After that, the data is written to the file.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="FileNotFoundException"></exception>
+    /// <exception cref="Exception"></exception>
     public static void Write(string[] data)
     {
         if (data is null || (data is not null && data.GetLength(0) == 0))

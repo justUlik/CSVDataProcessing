@@ -113,6 +113,7 @@ public static class UserDataProcessing
         string[][] data = new string[0][];
         do
         {
+            Console.WriteLine("Require an absolute path");
             string filePath = GetFilePath();
             try
             {
@@ -424,7 +425,7 @@ public static class UserDataProcessing
     /// <returns>A truncated version of the input string</returns>
     private static string CutString(string str, int sz)
     {
-        if (string.IsNullOrEmpty(str))
+        if (string.IsNullOrEmpty(str) || str.Length == 0)
         {
             return "";
         }
