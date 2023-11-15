@@ -17,10 +17,42 @@ public class DataProcessing
         };
         return getIdx;
     }
+    
+    public static string[] GetUniqueValueInRow(string[][] data, string colomnName)
+    {
+        if (data is null || (data is not null && data.GetLength(0) == 0))
+        {
+            throw new ArgumentNullException("Data is empty or null");
+        }
+        int getIdx = GetIdxByColoumnName(colomnName);
+        if (getIdx == -1)
+        {
+            throw new ArgumentException("No such rowName in data format");
+        }
+
+        try
+        {
+            string[] allValuesRow = new string[data.GetLength(0) - 2];
+            for (int i = 2; i < data.GetLength(0); ++i)
+            {
+                allValuesRow[i - 2] = data[i][getIdx];
+            }
+
+            return allValuesRow.Distinct().ToArray();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
 
     public static string[][] GetSelectionByValueRow(string[][] data, string columnName1, string valueSelection1,
         string columnName2, string valueSelection2)
     {
+        if (data is null || (data is not null && data.GetLength(0) == 0))
+        {
+            throw new ArgumentNullException("Data is null of empty");
+        }
         int getIdx1 = GetIdxByColoumnName(columnName1);
         int getIdx2 = GetIdxByColoumnName(columnName2);
         if (getIdx1 == -1 || getIdx2 == -2)
@@ -28,212 +60,294 @@ public class DataProcessing
             throw new ArgumentException("No such rowName in data format");
         }
 
-        string[][] result = new string[data.GetLength(0)][];
-        
-        int cnt = 0;
-        for (int i = 0; i < 2; ++i)
+        try
         {
-            result[cnt++] = data[i];
-        }
-        for (int i = 0; i < data.GetLength(0); ++i)
-        {
-            if (data[i][getIdx1] == valueSelection1 && data[i][getIdx2] == valueSelection2)
+            string[][] result = new string[data.GetLength(0)][];
+
+            int cnt = 0;
+            for (int i = 0; i < 2; ++i)
             {
                 result[cnt++] = data[i];
             }
-        }
-        Array.Resize(ref result, cnt);
-        return result;
-    }
-    public static string[] GetUniqueValueInRow(string[][] data, string colomnName)
-    {
-        int getIdx = GetIdxByColoumnName(colomnName);
-        if (getIdx == -1)
-        {
-            throw new ArgumentException("No such rowName in data format");
-        }
 
-        // здесь надо будет обработать -2
-        string[] allValuesRow = new string[data.GetLength(0) - 2];
-        for (int i = 2; i < data.GetLength(0); ++i)
-        {
-            allValuesRow[i - 2] = data[i][getIdx];
-        }
+            for (int i = 0; i < data.GetLength(0); ++i)
+            {
+                if (data[i][getIdx1] == valueSelection1 && data[i][getIdx2] == valueSelection2)
+                {
+                    result[cnt++] = data[i];
+                }
+            }
 
-        return allValuesRow.Distinct().ToArray();
+            Array.Resize(ref result, cnt);
+            return result;
+        }
+        catch (ArgumentException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+        catch (IndexOutOfRangeException ex)
+        {
+            throw new IndexOutOfRangeException(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public static string[][] GetSelectionByValueRow(string[][] data, string coloumnName, string valueName)
     {
-        string[][] result = new string[data.GetLength(0)][];
-        int getIdx = GetIdxByColoumnName(coloumnName);
-        if (getIdx == -1)
+        if (data is null || (data is not null && data.GetLength(0) == 0))
         {
-            throw new ArgumentException("No such rowName in data format");
+            throw new ArgumentNullException("Data is empty");
         }
 
-        int cnt = 0;
-        for (int i = 0; i < 2; ++i)
+        try
         {
-            result[cnt++] = data[i];
-        }
-        for (int i = 0; i < data.GetLength(0); ++i)
-        {
-            if (data[i][getIdx] == valueName)
+            string[][] result = new string[data.GetLength(0)][];
+            int getIdx = GetIdxByColoumnName(coloumnName);
+            if (getIdx == -1)
+            {
+                throw new ArgumentException("No such rowName in data format");
+            }
+
+            int cnt = 0;
+            for (int i = 0; i < 2; ++i)
             {
                 result[cnt++] = data[i];
             }
+            for (int i = 0; i < data.GetLength(0); ++i)
+            {
+                if (data[i][getIdx] == valueName)
+                {
+                    result[cnt++] = data[i];
+                }
+            }
+            Array.Resize(ref result, cnt);
+            return result;    
         }
-        Array.Resize(ref result, cnt);
-        return result;
+        catch (ArgumentException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+        catch (IndexOutOfRangeException ex)
+        {
+            throw new IndexOutOfRangeException(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public static string[][] Sort(string[][] data, string coloumn, string typeSort)
     {
-        string[][] dataNoHeading = new string[data.GetLength(0) - 2][];
-        for (int i = 2; i < data.GetLength(0); ++i)
+        if (data is null || (data is not null && data.GetLength(0) == 0))
         {
-            dataNoHeading[i - 2] = (string[])data[i].Clone();
-        }
-        
-        string[][] result = new string[data.GetLength(0)][];
-        string[][] resultSort;
-        if (typeSort == "MergeSort")
-        {
-            resultSort = MergeSortByDateTime(dataNoHeading, coloumn);
-
-        } else if (typeSort == "QuickSort")
-        {
-            QuickSort(dataNoHeading, 0, dataNoHeading.GetLength(0) - 1, GetIdxByColoumnName(coloumn));
-            resultSort = dataNoHeading;
-        }
-        else
-        {
-            throw new ArgumentException("No such option to sort");
-        }
-        for (int i = 0; i < 2; ++i)
-        {
-            result[i] = (string[])data[i].Clone();
+            throw new ArgumentNullException("Empty or null data");
         }
 
-        for (int i = 0; i < resultSort.GetLength(0); ++i)
+        try
         {
-            result[i + 2] = resultSort[i];
+            string[][] dataNoHeading = new string[data.GetLength(0) - 2][];
+            for (int i = 2; i < data.GetLength(0); ++i)
+            {
+                dataNoHeading[i - 2] = (string[])data[i].Clone();
+            }
+
+            string[][] result = new string[data.GetLength(0)][];
+            string[][] resultSort;
+            if (typeSort == "MergeSort")
+            {
+                resultSort = MergeSortByDateTime(dataNoHeading, coloumn);
+
+            }
+            else if (typeSort == "QuickSort")
+            {
+                QuickSort(dataNoHeading, 0, dataNoHeading.GetLength(0) - 1, GetIdxByColoumnName(coloumn));
+                resultSort = dataNoHeading;
+            }
+            else
+            {
+                throw new ArgumentException("No such option to sort");
+            }
+
+            for (int i = 0; i < 2; ++i)
+            {
+                result[i] = (string[])data[i].Clone();
+            }
+
+            for (int i = 0; i < resultSort.GetLength(0); ++i)
+            {
+                result[i + 2] = resultSort[i];
+            }
+
+            return result;
         }
-        return result;
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
     
     private static string[][] MergeSortByDateTime(string[][] data, string colomnName)
     {
         int columnIndex = GetIdxByColoumnName(colomnName);
-        if (data.Length <= 1)
+        if (columnIndex == -1)
         {
-            return data;
+            throw new ArgumentException("No such column");
         }
 
-        int middle = data.Length / 2;
-        string[][] left = new string[middle][];
-        string[][] right = new string[data.Length - middle][];
-
-        for (int i = 0; i < middle; i++)
+        try
         {
-            left[i] = data[i];
-        }
+            if (data.Length <= 1)
+            {
+                return data;
+            }
 
-        for (int i = middle; i < data.Length; i++)
+            int middle = data.Length / 2;
+            string[][] left = new string[middle][];
+            string[][] right = new string[data.Length - middle][];
+
+            for (int i = 0; i < middle; i++)
+            {
+                left[i] = data[i];
+            }
+
+            for (int i = middle; i < data.Length; i++)
+            {
+                right[i - middle] = data[i];
+            }
+
+            left = MergeSortByDateTime(left, colomnName);
+            right = MergeSortByDateTime(right, colomnName);
+
+            return MergeByDateTime(left, right, columnIndex);
+        }
+        catch (Exception ex)
         {
-            right[i - middle] = data[i];
+            throw new Exception(ex.Message);
         }
-
-        left = MergeSortByDateTime(left, colomnName);
-        right = MergeSortByDateTime(right, colomnName);
-
-        return MergeByDateTime(left, right, columnIndex);
     }
 
     private static string[][] MergeByDateTime(string[][] left, string[][] right, int columnIndex)
     {
-        int leftIndex = 0, rightIndex = 0, mergeIndex = 0;
-
-        int mergedLength = left.Length + right.Length;
-        string[][] mergedArray = new string[mergedLength][];
-
-        while (leftIndex < left.Length && rightIndex < right.Length)
+        if (left is null || (left is not null && left.GetLength(0) == 0))
         {
-            DateTime leftDateTime = DateTime.Parse(left[leftIndex][columnIndex]);
-            DateTime rightDateTime = DateTime.Parse(right[rightIndex][columnIndex]);
+            throw new ArgumentException("Empty or null data");
+        }
+        if (right is null || (right is not null && right.GetLength(0) == 0))
+        {
+            throw new ArgumentException("Empty or null data");
+        }
 
-            if (leftDateTime <= rightDateTime)
+        try
+        {
+            int leftIndex = 0, rightIndex = 0, mergeIndex = 0;
+
+            int mergedLength = left.Length + right.Length;
+            string[][] mergedArray = new string[mergedLength][];
+
+            while (leftIndex < left.Length && rightIndex < right.Length)
+            {
+                DateTime leftDateTime = DateTime.Parse(left[leftIndex][columnIndex]);
+                DateTime rightDateTime = DateTime.Parse(right[rightIndex][columnIndex]);
+
+                if (leftDateTime <= rightDateTime)
+                {
+                    mergedArray[mergeIndex] = left[leftIndex];
+                    leftIndex++;
+                }
+                else
+                {
+                    mergedArray[mergeIndex] = right[rightIndex];
+                    rightIndex++;
+                }
+
+                mergeIndex++;
+            }
+
+            while (leftIndex < left.Length)
             {
                 mergedArray[mergeIndex] = left[leftIndex];
                 leftIndex++;
+                mergeIndex++;
             }
-            else
+
+            while (rightIndex < right.Length)
             {
                 mergedArray[mergeIndex] = right[rightIndex];
                 rightIndex++;
+                mergeIndex++;
             }
 
-            mergeIndex++;
+            return mergedArray;
         }
-
-        while (leftIndex < left.Length)
+        catch (Exception ex)
         {
-            mergedArray[mergeIndex] = left[leftIndex];
-            leftIndex++;
-            mergeIndex++;
+            throw new Exception(ex.Message);
         }
-
-        while (rightIndex < right.Length)
-        {
-            mergedArray[mergeIndex] = right[rightIndex];
-            rightIndex++;
-            mergeIndex++;
-        }
-
-        return mergedArray;
     }
     
     private static void QuickSort(string[][] data, int low, int high, int columnToSortBy)
     {
-        if (low < high)
+        if (data is null || (data is not null && data.GetLength(0) == 0))
         {
-            int partitionIndex = Partition(data, low, high, columnToSortBy);
-            
-            // Recursively sort the two partitions
-            QuickSort(data, low, partitionIndex - 1, columnToSortBy);
-            QuickSort(data, partitionIndex + 1, high, columnToSortBy);
+            throw new ArgumentException("Data is null or empty");
+        }
+
+        try
+        {
+            if (low < high)
+            {
+                int partitionIndex = Partition(data, low, high, columnToSortBy);
+
+                // Recursively sort the two partitions
+                QuickSort(data, low, partitionIndex - 1, columnToSortBy);
+                QuickSort(data, partitionIndex + 1, high, columnToSortBy);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
         }
     }
 
     private static int Partition(string[][] data, int low, int high, int columnToSortBy)
     {
-        string pivot = data[high][columnToSortBy];
-        DateTime pivotDate = DateTime.Parse(pivot);
-
-        int i = low - 1;
-
-        for (int j = low; j < high; j++)
+        try
         {
-            string currentDateValue = data[j][columnToSortBy];
-            DateTime currentDate = DateTime.Parse(currentDateValue);
+            string pivot = data[high][columnToSortBy];
+            DateTime pivotDate = DateTime.Parse(pivot);
 
-            if (currentDate <= pivotDate)
+            int i = low - 1;
+
+            for (int j = low; j < high; j++)
             {
-                i++;
+                string currentDateValue = data[j][columnToSortBy];
+                DateTime currentDate = DateTime.Parse(currentDateValue);
 
-                // Swap elements
-                string[] temp = data[i];
-                data[i] = data[j];
-                data[j] = temp;
+                if (currentDate <= pivotDate)
+                {
+                    i++;
+
+                    // Swap elements
+                    string[] temp = data[i];
+                    data[i] = data[j];
+                    data[j] = temp;
+                }
             }
+
+            // Swap pivot with element at i+1
+            string[] pivotTemp = data[i + 1];
+            data[i + 1] = data[high];
+            data[high] = pivotTemp;
+
+            return i + 1;
         }
-
-        // Swap pivot with element at i+1
-        string[] pivotTemp = data[i + 1];
-        data[i + 1] = data[high];
-        data[high] = pivotTemp;
-
-        return i + 1;
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 }

@@ -24,14 +24,17 @@ public class CsvProcessing
     private static bool CheckLineFormat(string line, ref string forException)
     {
         string[] fields = line.Split(";");
-        if (fields is null || (fields is not null && fields.Length != 8))
-        {
-            forException = "File null or empty";
-            return false;
-        }
-
         try
         {
+            if (!(fields?.Length > 0))
+            {
+                forException = "File null or empty";
+            }
+            if (fields.Length != 8)
+            {
+                forException = "File not require format";
+                return false;
+            }
             if (!int.TryParse(fields[0], out _))
             {
                 forException = "Format error inside file";
@@ -83,50 +86,70 @@ public class CsvProcessing
 
         if (!File.Exists(fPath))
         {
-            throw new ArgumentNullException("File does not exist");    
+            throw new ArgumentNullException("File does not exist");
         }
 
         if (Path.GetFullPath(fPath) != fPath)
         {
             throw new ArgumentException("Not absolute path given");
         }
-        
-        string[] lines = File.ReadAllLines(fPath);
 
-        if (lines is null || (lines is not null && lines.Length == 0))
+        try
         {
-            throw new ArgumentNullException("Empty file given");
-        }
-
-        for (int i = 0; i < 2; ++i)
-        {
-            lines[i] = lines[i].Replace("\"", "");
-        }
-        
-        for (int i = 2; i < lines.Length; ++i)
-        {
-            string forException = "";
-            lines[i] = lines[i].Replace("\"", "");
-            if (!CheckLineFormat(lines[i], ref forException))
+            string[] lines = File.ReadAllLines(fPath);
+            if (lines is null || (lines is not null && lines.Length == 0))
             {
-                throw new ArgumentNullException(forException);
+                throw new ArgumentNullException("Empty file given");
+            }
+
+            if (lines.Length < 3)
+            {
+                throw new Exception("The file format is not observed");
+            }
+            for (int i = 0; i < 2; ++i)
+            {
+                lines[i] = lines[i].Replace("\"", "");
+            }
+        
+            for (int i = 2; i < lines.Length; ++i)
+            {
+                string forException = "";
+                lines[i] = lines[i].Replace("\"", "");
+                if (!CheckLineFormat(lines[i], ref forException))
+                {
+                    throw new ArgumentException(forException);
+                }
+            }
+        
+            return lines;
+        }
+        catch (Exception ex)
+        {
+            switch (ex.GetType().Name)
+            {
+                case "ArgumentException":
+                    throw new ArgumentException("Such file is invalid.");
+                    break;
+                case "IOException":
+                    throw new IOException("Error while openning a file or reading data from.");
+                    break;
+                default:
+                    throw new ("An unexpected error occurred.");
+                    break;
             }
         }
-        
-        return lines;
     }
 
-    public static string[][] RefactorData(string[] data)
+    public static string[][]? RefactorData(string[] data)
     {
         if (data is null)
         {
             return null;
         }
 
-        string[][] result = new string[data.Length][];
-
         try
         {
+            string[][] result = new string[data.Length][];
             for (int i = 0; i < data.Length; ++i)
             {
                 string[] line = data[i].Split(';');
@@ -142,13 +165,16 @@ public class CsvProcessing
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            throw;
+            throw new Exception(ex.Message);
         }
     }
     
     public static void Write(string data, string nPath)
     {
+        if (data is null || (data is not null && data.Length == 0))
+        {
+            return;
+        }
         if (string.IsNullOrEmpty(nPath))
         {
             throw new ArgumentNullException(nameof(nPath));    
@@ -160,21 +186,32 @@ public class CsvProcessing
             file.Close();
         }
 
-        if (File.Exists(nPath))
+        try
         {
-            using (StreamWriter file = File.AppendText(nPath))
+            if (File.Exists(nPath))
             {
-                file.WriteLine(data);
-            }    
+                using (StreamWriter file = File.AppendText(nPath))
+                {
+                    file.WriteLine(data);
+                }
+            }
+            else
+            {
+                throw new FileNotFoundException("File not found", nPath);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            throw new FileNotFoundException("File not found", nPath);
+            throw new Exception(ex.Message);
         }
     }
 
     public static void Write(string[] data)
     {
+        if (data is null || (data is not null && data.GetLength(0) == 0))
+        {
+            throw new ArgumentNullException("Given data is empty or null");
+        }
         if (string.IsNullOrEmpty(fPath))
         {
             throw new ArgumentNullException(nameof(fPath));    
@@ -186,14 +223,22 @@ public class CsvProcessing
             file.Close();
         }
 
-        if (File.Exists(fPath))
+        try
         {
-            File.WriteAllLines(fPath, data);
+            if (File.Exists(fPath))
+            {
+                File.WriteAllLines(fPath, data);
+            }
+            else
+            {
+                throw new FileNotFoundException("File not found", fPath);
+            }
         }
-        else
+        catch (Exception e)
         {
-            throw new FileNotFoundException("File not found", fPath);
+            throw new Exception(e.Message);
         }
+        
     }
     
 }
