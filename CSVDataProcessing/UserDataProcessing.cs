@@ -50,7 +50,7 @@ public static class UserDataProcessing
         {
             return true;
         }
-}
+    }
     /// <summary>
     /// Get from user filepath and check if valid it is
     /// </summary>
@@ -91,6 +91,7 @@ public static class UserDataProcessing
             {
                 isRead = false;
                 Console.WriteLine(ex.Message);
+                System.Threading.Thread.Sleep(5000);
             }
 
             if (!isRead)
@@ -138,12 +139,14 @@ public static class UserDataProcessing
                 {
                     isRead = false;
                     Console.WriteLine(ex.Message);
+                    System.Threading.Thread.Sleep(5000);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 isRead = false;
+                System.Threading.Thread.Sleep(5000);
             }
 
             if (!isRead)
@@ -201,6 +204,8 @@ public static class UserDataProcessing
 
         if (IsNullOrEmpty(data))
         {
+            Console.WriteLine("Empty data given.");
+            System.Threading.Thread.Sleep(5000);
             return;
         }
         
@@ -213,57 +218,74 @@ public static class UserDataProcessing
             Console.WriteLine("1. StationStart");
             Console.WriteLine("2. StationEnd");
             Console.WriteLine("3. StationStart and StationEnd");
-            Console.WriteLine("4. Stop the program");
             
             var cmd = Console.ReadKey().Key;
             if (cmd == ConsoleKey.D1) 
             {
                 isRecievedTrainsition = true; 
-                string valueSelection = UserGetValueSelectionByRow(data, "StationStart");
                 try
                 {
+                    bool forException = false;
+                    string valueSelection = UserGetValueSelectionByRow(data, "StationStart");
                     string[][] result =
                         CsvDataUtility.DataProcessing.GetSelectionByValueRow(data, "StationStart", valueSelection); 
-                    PrintData(result);
+                    PrintData(result, ref forException);
+                    if (forException)
+                    {
+                        return;
+                    }
                     SaveDataMenu(result);
                 }
                 catch (Exception ex)
                 {
                     isRecievedTrainsition = false; 
                     Console.WriteLine(ex.Message);
+                    System.Threading.Thread.Sleep(5000);
                 }
             } else if (cmd == ConsoleKey.D2) 
             {
                 isRecievedTrainsition = true; 
-                string valueSelection = UserGetValueSelectionByRow(data, "StationEnd");
                 try
                 {
+                    bool forException = false;
+                    string valueSelection = UserGetValueSelectionByRow(data, "StationEnd");
                     string[][] result =
                         CsvDataUtility.DataProcessing.GetSelectionByValueRow(data, "StationEnd", valueSelection);
-                    PrintData(result);
+                    PrintData(result, ref forException);
+                    if (forException)
+                    {
+                        return;
+                    }
                     SaveDataMenu(result);
                 }
                 catch (Exception ex)
                 {
                     isRecievedTrainsition = false;
                     Console.WriteLine(ex.Message);
+                    System.Threading.Thread.Sleep(5000);
                 }
             } else if (cmd == ConsoleKey.D3) 
             {
                 isRecievedTrainsition = true; 
-                string valueSelectionStart = UserGetValueSelectionByRow(data, "StationStart"); 
-                string valueSelectionEnd = UserGetValueSelectionByRow(data, "StationEnd");
                 try
                 {
+                    bool forException = false;
+                    string valueSelectionStart = UserGetValueSelectionByRow(data, "StationStart"); 
+                    string valueSelectionEnd = UserGetValueSelectionByRow(data, "StationEnd");
                     string[][] result = CsvDataUtility.DataProcessing.GetSelectionByValueRow(data, "StationStart",
                         valueSelectionStart, "StationEnd", valueSelectionEnd);
-                    PrintData(result);
+                    PrintData(result, ref forException);
+                    if (forException)
+                    {
+                        return;
+                    }
                     SaveDataMenu(result);
                 }
                 catch (Exception ex)
                 {
                     isRecievedTrainsition = false;
                     Console.WriteLine(ex.Message);
+                    System.Threading.Thread.Sleep(5000);
                 }
             }
             else
@@ -302,6 +324,7 @@ public static class UserDataProcessing
         catch (Exception ex)
         {
             Console.WriteLine($"Something went wrong. {ex.Message}");
+            System.Threading.Thread.Sleep(5000);
             return "";
         }
 
@@ -331,7 +354,6 @@ public static class UserDataProcessing
                 Console.WriteLine("No such value in values of row. Try again:");
             }
         } while (!isRead);
-        Console.WriteLine(valueSelection);
         return valueSelection;
     }
 
@@ -351,18 +373,22 @@ public static class UserDataProcessing
     /// Finally, it waits for the user to press the 'Q' key to close the data view.
     /// </summary>
     /// <param name="data">The data to be printed</param>
-    private static void PrintData(string[][] data)
+    private static void PrintData(string[][] data, ref bool isException)
     {
         Console.Clear();
         if (IsNullOrEmpty(data))
         {
             Console.WriteLine("No data to print");
+            isException = true;
+            System.Threading.Thread.Sleep(5000);
             return;
         }
 
         if (data.GetLength(0) <= 2)
         {
             Console.WriteLine("No data to print");
+            isException = true;
+            System.Threading.Thread.Sleep(5000);
             return;
         }
         const int spaceId = 4;
@@ -377,13 +403,17 @@ public static class UserDataProcessing
         {
             if (IsNullOrEmpty(line))
             {
+                isException = true;
                 Console.WriteLine("Data doesn`t require format");
+                System.Threading.Thread.Sleep(5000);
                 return;
             }
 
             if (line.Length != 8)
             {
+                isException = true;
                 Console.WriteLine("Data doesn`t require format");
+                System.Threading.Thread.Sleep(5000);
                 return;
             }
         }
@@ -460,6 +490,7 @@ public static class UserDataProcessing
         if (IsNullOrEmpty(data))
         {
             Console.WriteLine("Data is empty or null");
+            System.Threading.Thread.Sleep(5000);
             return;
         }
         Console.WriteLine("Choose one option by pressing corresponding number");
@@ -483,6 +514,7 @@ public static class UserDataProcessing
                     isRead = false;
                     SaveAllData(data);
                     Console.WriteLine(ex.Message);
+                    System.Threading.Thread.Sleep(5000);
                 }
             } 
             else if (cmd == ConsoleKey.D2)
@@ -497,6 +529,7 @@ public static class UserDataProcessing
                     isRead = false;
                     SaveOneStringData(data);
                     Console.WriteLine(ex.Message);
+                    System.Threading.Thread.Sleep(5000);
                 }
                 
             }
@@ -545,29 +578,44 @@ public static class UserDataProcessing
     /// <param name="data">The data from which the string is taken for writing</param>
     private static void SaveOneStringData(string[][] data)
     {
+        bool forException = false;
         if (IsNullOrEmpty(data))
         {
             return;
         }
         Console.Clear();
         Console.WriteLine("Choose index of this line(in table after №");
-        PrintData(data);
+        PrintData(data, ref forException);
+        if (forException)
+        {
+            return;
+        }
         Console.WriteLine("Please enter index of this line(in table after №):");
         bool isRead = false;
         int ind;
         do
         {
-            if (int.TryParse(Console.ReadLine(), out ind))
+            try
             {
-                if (0 < ind && ind < data.GetLength(0))
+                if (int.TryParse(Console.ReadLine(), out ind))
                 {
-                    isRead = true;
+                    if (0 < ind && ind < data.GetLength(0))
+                    {
+                        isRead = true;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                System.Threading.Thread.Sleep(5000);
+                return;
             }
 
             if (!isRead)
             {
                 Console.WriteLine("Try again:");
+                System.Threading.Thread.Sleep(5000);
             }
         } while (!isRead);
 
@@ -585,6 +633,7 @@ public static class UserDataProcessing
             {
                 Console.WriteLine(ex.Message);
                 success = false;
+                System.Threading.Thread.Sleep(5000);
             }
         } while (!success);
     }
@@ -598,12 +647,14 @@ public static class UserDataProcessing
         if (IsNullOrEmpty(data))
         {
             Console.WriteLine("Empty data");
+            System.Threading.Thread.Sleep(5000);
             return;
         }
         Console.Clear();
         Console.WriteLine("Choose by which sort method you want to sort data. Press the corresponding number");
         Console.WriteLine("1. MergeSort");
         Console.WriteLine("2. QuickSort");
+        Console.WriteLine("3. Stop the session.");
         string typeSort = "";
         bool isRecievedTrainsition = false;
         do
@@ -613,10 +664,16 @@ public static class UserDataProcessing
             { 
                 isRecievedTrainsition = true;
                 typeSort = "MergeSort";
-            } else if (cmd == ConsoleKey.D2) 
+            } 
+            else if (cmd == ConsoleKey.D2) 
             { 
                 isRecievedTrainsition = true;
                 typeSort = "QuickSort";
+            }
+            else if (cmd == ConsoleKey.D3)
+            {
+                isRecievedTrainsition = true;
+                return;
             }
             else
             {
@@ -643,28 +700,40 @@ public static class UserDataProcessing
                 isRecievedTrainsition = true;
                 try
                 {
+                    bool forException = false;
                     string[][] result = CsvDataUtility.DataProcessing.Sort(data, "TimeStart", typeSort);
-                    PrintData(result);
+                    PrintData(result, ref forException);
+                    if (forException)
+                    {
+                        return;
+                    }
                     SaveDataMenu(result);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                     isRecievedTrainsition = false;
+                    System.Threading.Thread.Sleep(5000);
                 }
             } else if (cmd == ConsoleKey.D2) 
             { 
                 isRecievedTrainsition = true;
                 try
                 {
+                    bool forException = false;
                     string[][] result = CsvDataUtility.DataProcessing.Sort(data, "TimeEnd", typeSort);
-                    PrintData(result);
+                    PrintData(result, ref forException);
+                    if (forException)
+                    {
+                        return;
+                    }
                     SaveDataMenu(result);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                     isRecievedTrainsition = false;
+                    System.Threading.Thread.Sleep(5000);
                 }
             }
             else
@@ -675,6 +744,7 @@ public static class UserDataProcessing
             if (!isRecievedTrainsition)
             {
                 Console.WriteLine("Try again");
+                System.Threading.Thread.Sleep(5000);
             }
         } while (!isRecievedTrainsition);
     }

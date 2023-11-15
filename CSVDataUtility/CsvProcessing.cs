@@ -41,7 +41,7 @@ public class CsvProcessing
         try
         {
             // CHECK!
-            if (!(fields?.Length > 0))
+            if (fields is null || (fields is not null && fields.Length == 0))
             {
                 forException = "File null or empty";
             }
