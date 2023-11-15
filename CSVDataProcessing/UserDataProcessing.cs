@@ -12,11 +12,21 @@ namespace CSVDataProcessing;
 /// </summary>
 public static class UserDataProcessing
 {
+    /// <summary>
+    /// check if array is empty or null
+    /// </summary>
+    /// <param name="array"></param>
+    /// <returns></returns>
     private static bool IsNullOrEmpty(string[] array)
     {
         return (array is null || (array is not null && array.Length == 0));
     }
 
+    /// <summary>
+    /// check if array is empty or null
+    /// </summary>
+    /// <param name="array"></param>
+    /// <returns></returns>
     private static bool IsNullOrEmpty(string[][] array)
     {
         if (array is null || (array is not null && array.Length == 0))

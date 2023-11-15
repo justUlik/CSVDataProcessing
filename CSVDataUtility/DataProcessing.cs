@@ -1,7 +1,16 @@
 namespace CsvDataUtility;
 
+/// <summary>
+/// Class that organizes ways to make a selection from data or sort it.
+/// </summary>
 public class DataProcessing
 {
+    
+    /// <summary>
+    /// private method to get index by column name
+    /// </summary>
+    /// <param name="colomnName"></param>
+    /// <returns></returns>
     private static int GetIdxByColoumnName(string colomnName)
     {
         int getIdx = colomnName switch
@@ -18,6 +27,16 @@ public class DataProcessing
         return getIdx;
     }
     
+    /// <summary>
+    /// This is a method named "GetSelectionByValueRow" that takes in a 2-dimensional array of strings named "data",
+    /// two column names, and two value selections.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="colomnName"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="Exception"></exception>
     public static string[] GetUniqueValueInRow(string[][] data, string colomnName)
     {
         if (data is null || (data is not null && data.GetLength(0) == 0))
@@ -45,7 +64,8 @@ public class DataProcessing
             throw new Exception(ex.Message);
         }
     }
-
+    
+    
     public static string[][] GetSelectionByValueRow(string[][] data, string columnName1, string valueSelection1,
         string columnName2, string valueSelection2)
     {

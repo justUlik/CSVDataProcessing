@@ -113,9 +113,21 @@ public class CsvProcessing
                 "Время отправления со станции", "Конечная станция направления Аэроэкспресс",
                 "Время прибытия на конечную станцию направления Аэроэкспресс", "global_id", ""
             };
-            if (data[0] != firstReference || data[1] != secondReference)
+
+            for (int i = 0; i < 8; ++i)
             {
-                return false;
+                if (data[0][i] != firstReference[i])
+                {
+                    return false;
+                }
+            }
+
+            for (int i = 0; i < 8; ++i)
+            {
+                if (data[1][i] != secondReference[i])
+                {
+                    return false;
+                }
             }
 
             return true;
